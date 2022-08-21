@@ -1,9 +1,20 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 
 // import { Container } from './styles';
 
-export const Button = ({text, background, textColor, ...rest}) => {
+interface IButtonProps extends TouchableOpacityProps {
+  text: string;
+  background: string;
+  textColor: string;
+}
+
+export const Button = ({
+  text,
+  background,
+  textColor,
+  ...rest
+}: IButtonProps) => {
   return (
     <TouchableOpacity
       style={[styles.button, {backgroundColor: background}]}

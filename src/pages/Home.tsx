@@ -4,16 +4,30 @@ import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 import { Button } from '../components/Button';
 import { SkillCard } from '../components/SkillCard';
 
-// import { Container } from './styles';
+// import { Container } from './styles';]
+
+export interface ISkillsProps {
+  id: string;
+  name: string;
+}
 
 export const Home = () => {
-  const [newSkill, setNewSkill] = useState('');
-  const [skills, setSkills] = useState([]);
-  const [greeting, setGreeting] = useState('');
+  const [newSkill, setNewSkill] = useState<string>('');
+  const [skills, setSkills] = useState<ISkillsProps[]>([]);
+  const [greeting, setGreeting] = useState<string>('');
 
   const handleAddNewSkill = () => {
-    setSkills(oldState => [...oldState, newSkill]);
+    const data = {
+      id: String(new Date().getTime()),
+      name: newSkill,
+    };
+
+    setSkills(oldState => [...oldState, data]);
     setNewSkill('');
+  };
+
+  const handleRemoveSkill = (id: string) => {
+    setSkills(oldState => oldState.filter(skill => skill.id !== id));
   };
 
   useEffect(() => {
@@ -21,7 +35,7 @@ export const Home = () => {
 
     if (currentHour < 12) {
       setGreeting('Good morning');
-    } else if (currentHour > 12 && currentHour < 18) {
+    } else if (currentHour >= 12 && currentHour < 18) {
       setGreeting('Good afternoon');
     } else {
       setGreeting('Good night');
@@ -51,8 +65,13 @@ export const Home = () => {
       <FlatList
         showsVerticalScrollIndicator={false}
         data={skills}
-        keyExtractor={item => item}
-        renderItem={({item}) => <SkillCard skill={item} />}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <SkillCard
+            skillName={item.name}
+            onPress={() => handleRemoveSkill(item.id)}
+          />
+        )}
       />
     </View>
   );
